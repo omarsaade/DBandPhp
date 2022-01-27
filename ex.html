@@ -1,0 +1,308 @@
+//update.php
+
+<!-- <?php
+include_once 'connect.php';
+    $name = $_POST["name"];
+    $phone = $_POST["phone"];
+    $age = $_POST["age"];
+    $id = $_POST["id"];
+    //echo $name;
+    //echo $phone;
+    //echo $age;
+    $query = " update customers set name='".$name."' ,phone='".$phone."' ,age='".$age."' where id =$id ";
+    echo $query;
+    $result = mysql_query($query);
+    if($result){
+        header("Location:list.php");
+    }else{
+        echo mysql_error();
+        echo "Error";
+    }
+?> -->
+
+
+// listajax.php
+<!-- <table border="1" width="100%">
+    <tr>
+        <td>ID</td>
+        <td>Name</td>
+        <td>Phone</td>
+        <td>Age</td>
+        <td></td>
+           <td></td>
+    </tr>
+     <?php
+include_once './connect.php' ;
+
+$query = "select * from customers ";
+$result = mysql_query($query);
+while($row = mysql_fetch_array($result)){
+    echo "<tr>";
+    echo "<td>".$row["id"]."</td>";
+      echo "<td>".$row["name"]."</td>";
+        echo "<td>".$row["phone"]."</td>";
+          echo "<td>".$row["age"]."</td>";
+           echo "<td><a href='edit.php?id=".$row["id"]."'>Edit</a></td>"; 
+           echo "<td><input type='button' onclick='delete_item(".$row["id"].")' value='Delete' ></td>"; 
+    echo "</tr>";
+}
+?>
+</table> -->
+
+
+//list.php
+
+<!-- 
+<html>
+    <body>
+        <p><a href ="add.php">Add New Customer</a></p>
+        <br>
+        <table border="1" width="100%">
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Phone</td>
+                <td>Age</td>
+                <td></td>
+                   <td></td>
+            </tr>
+             <?php
+        include_once './connect.php' ;
+        
+        $query = "select * from customers ";
+        $result = mysql_query($query);
+        while($row = mysql_fetch_array($result)){
+            echo "<tr>";
+            echo "<td>".$row["id"]."</td>";
+              echo "<td>".$row["name"]."</td>";
+                echo "<td>".$row["phone"]."</td>";
+                  echo "<td>".$row["age"]."</td>";
+                   echo "<td><a href='edit.php?id=".$row["id"]."'>Edit</a></td>"; 
+                   echo "<td><a href='delete.php?id=".$row["id"]."'>Delete</a></td>"; 
+            echo "</tr>";
+        }
+        ?>
+        </table>
+       
+       <br>
+       <h2>Ajax list</h2>
+       <div id="message"></div>
+       <div id="list">
+           
+       </div>
+       <script>
+            function get_list(){
+               
+                  
+                    const xhttp = new XMLHttpRequest();
+                    xhttp.onload = function() {
+                    document.getElementById("list").innerHTML =this.responseText;
+                    }
+                    xhttp.open("GET", "listajax.php");
+                    xhttp.send();
+            }
+            
+            get_list();
+            
+            function delete_item(id){
+                  const xhttp = new XMLHttpRequest();
+                    xhttp.onload = function() {
+                    document.getElementById("message").innerHTML =this.responseText;
+                     get_list();
+                    }
+                    xhttp.open("GET", "deleteajax.php?id="+id);
+                    xhttp.send(); 
+            }
+        </script>
+       
+    </body>
+</html> -->
+
+
+//insertajax.php
+
+<!-- <?php
+    include_once 'connect.php';
+    $name = $_GET["name"];
+    $phone = $_GET["phone"];
+    $age = $_GET["age"];
+    //echo $name;
+    //echo $phone;
+    //echo $age;
+    $query = " insert into customers(name,phone,age) values ('".$name."','".$phone."','".$age."') ";
+   // echo $query;
+    $result = mysql_query($query);
+    if($result){
+       // header("Location:list.php");
+       echo "Insertted";
+    }else{
+        echo mysql_error();
+        echo "Error";
+    }
+?> -->
+
+
+//insert.php
+
+<!-- <?php
+include_once 'connect.php';
+    $name = $_POST["name"];
+    $phone = $_POST["phone"];
+    $age = $_POST["age"];
+    //echo $name;
+    //echo $phone;
+    //echo $age;
+    $query = " insert into customers(name,phone,age) values ('".$name."','".$phone."','".$age."') ";
+    echo $query;
+    $result = mysql_query($query);
+    if($result){
+        header("Location:list.php");
+    }else{
+        echo mysql_error();
+        echo "Error";
+    }
+?> -->
+
+//edit.php
+
+
+<!-- 
+<html>
+    <body>
+        <form action="update.php" method="post">
+            <?php
+            include_once 'connect.php';
+            $id = $_GET["id"];
+            $query = "select * from customers where id =$id ";
+            $result = mysql_query($query);
+            $row = mysql_fetch_array($result);
+            ?>
+            <p>Name</p>
+            <input type="text" name="name" value="<?php echo $row["name"] ?>">
+            <br>
+            <p>Phone</p>
+            <input type="text" name="phone" value="<?php echo $row["phone"] ?>">
+            <br>
+            <p>Age</p>
+            <input type="number" name="age" value="<?php echo $row["age"] ?>">
+            <br>
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
+            <input type="submit" value="Save">
+        </form>
+    </body>
+</html> -->
+
+
+//connect.php
+
+<!-- <?php
+define('DB_HOST', '127.0.0.1');       // Choose HOST_DIRECT or HOST_STUNNEL, depending on your application's requirements
+define('DB_USER', 'root'); // MySQL account username
+define('DB_PASS', '');    // MySQL account password
+define('DB_NAME', 'amctag_ulf');
+
+// Connect to the database
+$connexion = mysql_connect(DB_HOST, DB_USER, DB_PASS);
+  //set to utf8 encoding
+        mysql_set_charset('utf8',$connexion);
+
+// Handle error
+if (!$connexion) {
+die('Could not connect: ' . mysql_error());
+                 }
+
+
+$db_selected = mysql_select_db(DB_NAME, $connexion);
+if (!$db_selected) {
+die ('isses with DB : ' . mysql_error());
+                   }
+
+?> -->
+
+
+//deleteajax.php
+
+
+<!-- <?php
+include_once 'connect.php';
+    $id = $_GET["id"];
+$query = " delete from customers where id=$id ";
+   //echo $query;
+    $result = mysql_query($query);
+    if($result){
+       echo "deleted";
+    }else{
+        echo mysql_error();
+        echo "Error";
+    }
+?> -->
+
+
+//add.php
+
+
+<!--<html>
+    <body>
+        <h2>PHp form</h2>
+        <form action="insert.php" method="post">
+            <p>Name</p>
+            <input type="text" name="name" >
+            <br>
+            <p>Phone</p>
+            <input type="text" name="phone" >
+            <br>
+            <p>Age</p>
+            <input type="number" name="age" >
+            <br>
+            <input type="submit" value="Save">
+        </form>
+        
+        <h2>Ajax form</h2>
+        <div id="message">
+            
+        </div>
+        <form >
+            <p>Name</p>
+            <input type="text" id="name" >
+            <br>
+            <p>Phone</p>
+            <input type="text" id="phone" >
+            <br>
+            <p>Age</p>
+            <input type="number" id="age" >
+            <br>
+            <input onclick="save_ajax()" type="button" value="Save ajax">
+        </form>
+        <script>
+            function save_ajax(){
+                var name = document.getElementById("name").value;
+                 var phone = document.getElementById("phone").value;
+                  var age = document.getElementById("age").value;
+                  
+                    const xhttp = new XMLHttpRequest();
+                    xhttp.onload = function() {
+                    document.getElementById("message").innerHTML =this.responseText;
+                    }
+                    xhttp.open("GET", "insertajax.php?name="+name+"&phone="+phone+"&age="+age);
+                    xhttp.send();
+            }
+        </script>
+    </body>
+</html>  -->
+
+
+//delete.php
+
+<!-- <?php
+include_once 'connect.php';
+    $id = $_GET["id"];
+$query = " delete from customers where id=$id ";
+   echo $query;
+    $result = mysql_query($query);
+    if($result){
+        header("Location:list.php");
+    }else{
+        echo mysql_error();
+        echo "Error";
+    }
+?> -->
